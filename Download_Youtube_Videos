@@ -1,0 +1,33 @@
+#importing the module 
+from pytube import YouTube 
+  
+#where to save 
+SAVE_PATH = "D:/" #to_do 
+
+text = """ Enter the text here
+"""
+  
+import re
+urls = re.findall('http[s]?://youtu.be(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', text)
+urls = urls[0:3]
+for i in range(len(urls)):
+    link = urls[i]  
+    try:
+        # yt = YouTube(link)  
+        # stream = yt.streams.first()
+        # stream.download('D:/')  
+ 
+        yt = YouTube(link)  
+        all_res = yt.streams.all()
+        max = int(re.sub('p','',all_res[0].resolution))
+        for res in all_res:
+            if res.resolution:
+                loc_res = int(re.sub('p','',res.resolution)) 
+                if loc_res > max:
+                    max = loc_res
+        stream = yt.streams.filter(  resolution = str(max)+'p').first()
+        stream.download('D:/')  
+
+    except:
+        print("skipping:",i)
+        next
