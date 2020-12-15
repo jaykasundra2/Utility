@@ -1,0 +1,30 @@
+MLA = [
+    #Ensemble Methods
+    ensemble.AdaBoostClassifier(),
+    ensemble.BaggingClassifier(),
+    ensemble.ExtraTreesClassifier(),
+    ensemble.GradientBoostingClassifier(),
+    ensemble.RandomForestClassifier()  
+    ]
+MLA_columns = []
+MLA_compare = pd.DataFrame(columns = MLA_columns)
+
+
+row_index = 0
+for alg in tqdm.tqdm(MLA):
+    model = Pipeline([('vect', CountVectorizer()),
+                ('tfidf', TfidfTransformer()),
+                ('clf', alg),
+               ])
+    
+    
+    predicted = model.fit(X_train, y_train).predict(X_test)
+    
+    MLA_name = alg.__class__.__name__
+    MLA_compare.loc[row_index,'MLA Name'] = MLA_name
+    MLA_compare.loc[row_index, 'MLA Train Accuracy'] = round(model.score(X_train, y_train), 4)
+    MLA_compare.loc[row_index, 'MLA Test Accuracy'] = round(model.score(X_test, y_test), 4)
+    MLA_compare.loc[row_index, 'MLA Precission'] = precision_score(y_test, predicted, average='weighted')
+    MLA_compare.loc[row_index, 'MLA Recall'] = recall_score(y_test, predicted, average='weighted')
+
+    row_index+=1
