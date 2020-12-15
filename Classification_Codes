@@ -7,6 +7,35 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.metrics import accuracy_score, mean_squared_error,confusion_matrix, precision_score, recall_score, auc,roc_curve
 
 
+from sklearn.linear_model import LogisticRegression
+
+logreg = Pipeline([('vect', CountVectorizer()),
+                ('tfidf', TfidfTransformer()),
+                ('clf', LogisticRegression(n_jobs=4, C=1e5)),
+               ])
+logreg.fit(X_train, y_train)
+
+y_pred = logreg.predict(X_test)
+
+print('accuracy %s' % accuracy_score(y_pred, y_test))
+print(classification_report(y_test, y_pred,target_names=None))
+
+parameters = {}
+parameters['vect__max_df'] = [0.4] #[1.0, 0.8, 0.6, 0.4]
+parameters['vect__min_df'] = [0.0] #[0.0, 0.2]
+parameters['vect__max_features'] = [6000] #[2000, 4000, 6000]
+parameters['clf__penalty'] = ['l2']
+parameters['tfidf__norm'] = ['l1', 'l2']
+
+CV = GridSearchCV(logreg, parameters,  n_jobs= 1, cv=5, verbose=10)
+CV.fit(X_train, y_train)   
+
+print('Best score and parameter combination = ')
+
+print(CV.best_score_)    
+print(CV.best_params_)   
+
+
 MLA = [
     #Ensemble Methods
     ensemble.AdaBoostClassifier(),
