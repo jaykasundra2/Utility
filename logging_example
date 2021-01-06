@@ -1,0 +1,8 @@
+import message
+
+logger = message.init_logger()
+
+logger.info("Extracted %d documents from %s collection" %(len(collection_docs),collection_name))
+
+except Exception as e:
+  logger.error("Error in extracting data from %s collection" % (collection_name))
