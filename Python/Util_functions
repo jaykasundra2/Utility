@@ -1,0 +1,12 @@
+def combine_rare_categories_as_other(df, column, top_n=None, thresh_percent=None):
+    '''
+    column: name of the column
+    top_n: integer specify the number of top N categories that needs to be retained. Rest of the values to be marked as 'Other'
+    thresh_prercent: float between 0 and 1 specifying the categories having frequncy less than threshold to be marked as 'Other'
+    '''
+    if thresh_percent:
+        df[column].mask(df[column].map(df[column].value_counts(normalize=True)) < thresh_percent, 'Other')
+    elif top_n:
+        keep = df[column].value_counts().index[:top_n]
+        df[column] = np.where(df[column].isin(keep), df[column], 'Other')
+    return df
