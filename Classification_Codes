@@ -66,6 +66,10 @@ print(CV.best_params_)
 
 #     row_index+=1
 
+from sklearn import ensemble, linear_model, svm, tree, gaussian_process, naive_bayes, neighbors, discriminant_analysis
+from xgboost import XGBClassifier
+from sklearn import model_selection
+
 #Machine Learning Algorithm (MLA) Selection and Initialization
 MLA = [
     #Ensemble Methods
